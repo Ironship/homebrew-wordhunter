@@ -1,0 +1,74 @@
+name: Validate Homebrew cask
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-homebrew-cask-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Audit and install on Linux
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      HOMEBREW_NO_ANALYTICS: "1"
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_ENV_HINTS: "1"
+      EXPECTED_SHA256: 01194b3a0855cfd4c76e67977b4bd2eb4aa233c393cbdaf17b7a9a9bd009db3f
+      EXPECTED_SIZE: "149957112"
+    steps:
+      - name: Set up Homebrew
+        id: setup-homebrew
+        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c # 2026.07.10.1
+        with:
+          stable: true
+
+      - name: Require AppImage-capable Homebrew
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(brew --version | head -n 1 | awk '{print $2}')"
+          ruby -e 'abort "Homebrew 5.1.12 or newer is required (found #{ARGV[0]})" if Gem::Version.new(ARGV[0]) < Gem::Version.new("5.1.12")' "$version"
+
+      - name: Install Homebrew development dependencies
+        run: brew install-bundler-gems
+
+      - name: Check cask style and metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          brew style Casks/wordhunter.rb
+          brew audit --cask --strict --online Ironship/wordhunter/wordhunter
+
+      - name: Fetch and verify the release asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          brew fetch --cask --force Ironship/wordhunter/wordhunter
+          artifact="$(brew --cache --cask Ironship/wordhunter/wordhunter)"
+          test -f "$artifact"
+          actual_sha256="$(sha256sum "$artifact" | awk '{print $1}')"
+          actual_size="$(stat --format='%s' "$artifact")"
+          test "$actual_sha256" = "$EXPECTED_SHA256"
+          test "$actual_size" = "$EXPECTED_SIZE"
+
+      - name: Install without launching the GUI
+        shell: bash
+        run: |
+          set -euo pipefail
+          brew install --cask --require-sha Ironship/wordhunter/wordhunter
+          installed="$HOME/Applications/WordHunter.AppImage"
+          test -L "$installed"
+          test -x "$installed"
+          test "$(sha256sum "$installed" | awk '{print $1}')" = "$EXPECTED_SHA256"
+          brew uninstall --cask Ironship/wordhunter/wordhunter
+          test ! -e "$installed"
