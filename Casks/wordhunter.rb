@@ -1,6 +1,6 @@
 cask "wordhunter" do
-  version "1.0.8"
-  sha256 "052fd8f0f3d8c500807819dda96869ca50471ce969b31fdae6b8ddcd5b8b7bf5"
+  version "1.0.9"
+  sha256 "13351b77788b8d6330ce97f86e691283896f3574001fecf9a0eadf5158c45f67"
 
   url "https://github.com/Ironship/WordHunter/releases/download/WordHunter#{version}/WordHunter-#{version}-x86_64.AppImage",
       verified: "github.com/Ironship/WordHunter/"
