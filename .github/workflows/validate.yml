@@ -55,7 +55,7 @@ jobs:
           set -euo pipefail
           brew fetch --cask --force Ironship/wordhunter/wordhunter
           cache_root="$(brew --cache)"
-          artifact="$(find "$cache_root" -type f -name '*--WordHunter-1.0.8-x86_64.AppImage' -print -quit)"
+          artifact="$(find "$cache_root" -type f -name '*--WordHunter-1.0.10-x86_64.AppImage' -print -quit)"
           test -n "$artifact"
           printf 'Verifying %s\n' "$artifact"
           actual_sha256="$(sha256sum "$artifact" | awk '{print $1}')"
