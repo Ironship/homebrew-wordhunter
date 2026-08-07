@@ -23,8 +23,8 @@ jobs:
       HOMEBREW_NO_ANALYTICS: "1"
       HOMEBREW_NO_AUTO_UPDATE: "1"
       HOMEBREW_NO_ENV_HINTS: "1"
-      EXPECTED_SHA256: 052fd8f0f3d8c500807819dda96869ca50471ce969b31fdae6b8ddcd5b8b7bf5
-      EXPECTED_SIZE: "150485496"
+      EXPECTED_SHA256: 309dcae292637265759cde2ec9de8d270f5b4768b1cbdade385a0b353e6ab523
+      EXPECTED_SIZE: "140417528"
     steps:
       - name: Set up Homebrew
         id: setup-homebrew
