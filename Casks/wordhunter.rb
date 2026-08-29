@@ -1,6 +1,6 @@
 cask "wordhunter" do
-  version "1.0.10"
-  sha256 "309dcae292637265759cde2ec9de8d270f5b4768b1cbdade385a0b353e6ab523"
+  version "1.1.0"
+  sha256 "7be75dbb3a3161a8451ca8ad2dc1161921c0ed791a8108f48869781ee2ca3022"
 
   on_linux do
     depends_on arch: :x86_64

@@ -23,8 +23,8 @@ jobs:
       HOMEBREW_NO_ANALYTICS: "1"
       HOMEBREW_NO_AUTO_UPDATE: "1"
       HOMEBREW_NO_ENV_HINTS: "1"
-      EXPECTED_SHA256: 309dcae292637265759cde2ec9de8d270f5b4768b1cbdade385a0b353e6ab523
-      EXPECTED_SIZE: "140417528"
+      EXPECTED_SHA256: 7be75dbb3a3161a8451ca8ad2dc1161921c0ed791a8108f48869781ee2ca3022
+      EXPECTED_SIZE: "140765688"
     steps:
       - name: Set up Homebrew
         id: setup-homebrew
@@ -55,7 +55,7 @@ jobs:
           set -euo pipefail
           brew fetch --cask --force Ironship/wordhunter/wordhunter
           cache_root="$(brew --cache)"
-          artifact="$(find "$cache_root" -type f -name '*--WordHunter-1.0.10-x86_64.AppImage' -print -quit)"
+          artifact="$(find "$cache_root" -type f -name '*--WordHunter-1.1.0-x86_64.AppImage' -print -quit)"
           test -n "$artifact"
           printf 'Verifying %s\n' "$artifact"
           actual_sha256="$(sha256sum "$artifact" | awk '{print $1}')"
